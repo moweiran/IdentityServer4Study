@@ -1,6 +1,7 @@
 # IdentityServer4Study
 IdentityServer4 Study
 
+```
 Pomelo.EntityFrameworkCore.MySql
 Pomelo.EntityFrameworkCore.MySql.Design
 
@@ -31,3 +32,4 @@ drop table apiscopes;
 drop table apiresources;
 drop table clients;
 drop table __efmigrationshistory;
+```
