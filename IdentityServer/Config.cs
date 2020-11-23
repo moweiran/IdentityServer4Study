@@ -78,7 +78,7 @@ namespace IdentityServer
             },
             new ApiResource("Api2","Api2")
             {
-                Scopes = {"api2"}
+                Scopes = {"api2","openid","profile"}
             }
         };
 

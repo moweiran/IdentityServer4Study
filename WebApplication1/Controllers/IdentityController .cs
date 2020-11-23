@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace IdentityServer.Controller
             //var serializer = new JsonNetSerializer();
 
             var user = HttpContext.User;
+            var claim = User.Claims.Where(a => a.Type == JwtClaimTypes.Subject).FirstOrDefault();
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
     }

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer.csproj", "{23809CB2-DBF7-4F6F-8BC2-F444818E422C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{23809CB2-DBF7-4F6F-8BC2-F444818E422C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "..\WebApplication1\WebApplication1.csproj", "{48CDCB87-1CCC-4392-85F5-1E305B8DD19E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{48CDCB87-1CCC-4392-85F5-1E305B8DD19E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "..\Client\Client.csproj", "{3103ACE2-BBE3-4317-A428-0BDCEF159263}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{3103ACE2-BBE3-4317-A428-0BDCEF159263}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{91DA9DD3-72F7-4302-ABAF-B487B462D5DF}"
 	ProjectSection(SolutionItems) = preProject
-		..\readme.txt = ..\readme.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

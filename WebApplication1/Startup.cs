@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,17 +28,33 @@ namespace WebApplication1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAuthentication("Bearer")
-             .AddJwtBearer("Bearer", options =>
-             {
-                 options.Authority = "http://localhost:5000";
-                 options.RequireHttpsMetadata = false;
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateAudience = false
-                 };
-                 //options.Audience = "Api2";
-             });
+            // AddAuthentication 写法一
+            //services.AddAuthentication("Bearer")
+            // .AddJwtBearer("Bearer", options =>
+            // {
+            //     options.Authority = "http://localhost:5000";
+            //     options.RequireHttpsMetadata = false;
+            //     options.TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         ValidateAudience = false
+            //     };
+            //     //options.Audience = "Api2";
+            // });
+            // AddAuthentication 写法二
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultForbidScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddIdentityServerAuthentication(options =>
+            {
+                options.Authority = "http://localhost:5000";
+                options.ApiName = "Api2";
+                options.RequireHttpsMetadata = false;
+            });
             //services.AddAuthorization(options =>
             //{
             //    options.AddPolicy("ApiScope", policy =>

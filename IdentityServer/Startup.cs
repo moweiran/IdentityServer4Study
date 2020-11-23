@@ -52,8 +52,10 @@ namespace IdentityServer
                     options.TokenCleanupInterval = 30;
                 })
                 .AddResourceOwnerValidator<ResourcePasswordValidator>();
-                //.AddTestUsers(Config.GetUsers);
+            //.AddTestUsers(Config.GetUsers);
             #endregion
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,60 +68,55 @@ namespace IdentityServer
                 app.UseDeveloperExceptionPage();
             }
             app.UseIdentityServer();
-            //app.UseRouting();
+            app.UseRouting();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/", async context =>
-            //    {
-            //        await context.Response.WriteAsync("Hello World!");
-            //    });
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
 
         private void InitializeDatabase(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+            var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            context.Database.Migrate();
+            foreach (var client in Config.Clients)
             {
-                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                context.Database.Migrate();
-                foreach (var client in Config.Clients)
+                if (!context.Clients.Any(o => o.ClientId == client.ClientId))
                 {
-                    if (!context.Clients.Any(o => o.ClientId == client.ClientId))
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
+                    context.Clients.Add(client.ToEntity());
                 }
-                //context.SaveChanges();
-
-                foreach (var identityResource in Config.IdentityResources)
-                {
-                    if (!context.IdentityResources.Any(o => o.Name == identityResource.Name))
-                    {
-                        context.IdentityResources.Add(identityResource.ToEntity());
-                    }
-                }
-
-                foreach (var resource in Config.ApiResources)
-                {
-                    if (!context.ApiResources.Any(o => o.Name == resource.Name))
-                    {
-                        context.ApiResources.Add(resource.ToEntity());
-                    }
-                }
-                //context.SaveChanges();
-
-                foreach (var scope in Config.ApiScopes)
-                {
-                    if (!context.ApiScopes.Any(o => o.Name == scope.Name))
-                    {
-                        context.ApiScopes.Add(scope.ToEntity());
-                    }
-                }
-                context.SaveChanges();
             }
+            //context.SaveChanges();
+
+            foreach (var identityResource in Config.IdentityResources)
+            {
+                if (!context.IdentityResources.Any(o => o.Name == identityResource.Name))
+                {
+                    context.IdentityResources.Add(identityResource.ToEntity());
+                }
+            }
+
+            foreach (var resource in Config.ApiResources)
+            {
+                if (!context.ApiResources.Any(o => o.Name == resource.Name))
+                {
+                    context.ApiResources.Add(resource.ToEntity());
+                }
+            }
+            //context.SaveChanges();
+
+            foreach (var scope in Config.ApiScopes)
+            {
+                if (!context.ApiScopes.Any(o => o.Name == scope.Name))
+                {
+                    context.ApiScopes.Add(scope.ToEntity());
+                }
+            }
+            context.SaveChanges();
         }
     }
 }
